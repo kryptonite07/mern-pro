@@ -23,6 +23,7 @@ exports.login = (req, res) => {
     });
 }
 
+
 exports.delete = catchAsyncId(async (req, res) => {
     let id = req.params.id;
     await User.findByIdAndDelete(id);
@@ -72,6 +73,21 @@ exports.delete = catchAsync(async (req, res) => {
     await User.findByIdAndDelete(id);
     res.status(200).send('Successfully deleted.');
 });
+
+exports.loginWithID = (req, res) => {
+    let { token } = req.body;
+    jwt.verify(token, config.secret, (err, payload) => {
+        if (err) return res.status(401).send('Unauthorized.');
+        else {
+            User.findById(payload._id).select('-password -salt').then(user => {
+                return res.status(200).send({
+                    token: getToken(user),
+                    user
+                });
+            }).catch(err = handleError(err, res));
+        }
+    });
+}
 
 exports.formatPassword = catchAsync(async (req, res) => {
     let id = req.params.id;
