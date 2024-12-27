@@ -13,6 +13,10 @@ module.exports = function() {
                 return done('User cannot find.', false);
             }
 
+            if (!user === -2 ) {
+                return done('User cannot find.', false);
+            }
+
             if (user.allow === 0) {
                 return done('Let you get admin accepting.', false);
             }
