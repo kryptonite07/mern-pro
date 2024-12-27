@@ -23,6 +23,12 @@ exports.login = (req, res) => {
     });
 }
 
+exports.delete = catchAsyncId(async (req, res) => {
+    let id = req.params.id;
+    await User.findByIdAndDelete(id);
+    res.status(200).send('Successfully deleted.');
+});
+
 exports.loginWithToken = (req, res) => {
     let { token } = req.body;
     jwt.verify(token, config.secret, (err, payload) => {
